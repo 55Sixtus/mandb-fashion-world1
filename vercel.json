@@ -1,5 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "mkdir -p public && cp index.html *.jpg public/",
-  "outputDirectory": "public"
+  "buildCommand": null,
+  "installCommand": null,
+  "outputDirectory": "."
 }
