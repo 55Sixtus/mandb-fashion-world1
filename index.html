@@ -503,62 +503,62 @@
     </nav>
 
     <!-- 1. Hero Section -->
-    <section class="relative h-screen min-h-[600px] flex items-center justify-center bg-charcoal py-28 md:py-36">
-      <div class="absolute inset-0 z-0">
-        <div class="img-container-luxury h-full w-full">
-          <img src="https://i.ibb.co/9HzZCWjP/logo5.png" alt="Luxury African Fashion" class="w-full h-full object-cover opacity-60" fetchpriority="high" decoding="async">
+    <section class="relative h-screen min-h-[600px] flex items-center justify-center bg-charcoal overflow-hidden pt-20">
+      <!-- Animated Slider Background -->
+      <div class="absolute inset-0 z-0" id="hero-slider">
+        <div class="hero-slide absolute inset-0 transition-opacity duration-[2000ms] ease-in-out opacity-100 z-10 bg-[#FAF6F0]">
+          <img src="https://i.ibb.co/9HzZCWjP/logo5.png" alt="M&B Fashion World Logo" class="w-full h-full object-contain opacity-10 scale-100 transition-transform duration-[20000ms] ease-linear transform-gpu">
         </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent"></div>
+        <div class="hero-slide absolute inset-0 transition-opacity duration-[2000ms] ease-in-out opacity-0 z-0 bg-charcoal">
+          <img src="https://i.ibb.co/84SfvCbL/Whats-App-Image-2026-07-28-at-11-03-31-PM.jpg" alt="Luxury African Fashion" class="w-full h-full object-cover opacity-60 scale-100 transition-transform duration-[20000ms] ease-linear transform-gpu" style="object-position: center top;">
+        </div>
+        <div class="hero-slide absolute inset-0 transition-opacity duration-[2000ms] ease-in-out opacity-0 z-0 bg-charcoal">
+          <img src="https://i.ibb.co/Rp4JCZ2d/IMG-20260728-WA0118.jpg" alt="Luxury African Fashion" class="w-full h-full object-cover opacity-60 scale-100 transition-transform duration-[20000ms] ease-linear transform-gpu" style="object-position: center top;">
+        </div>
+        <div class="hero-slide absolute inset-0 transition-opacity duration-[2000ms] ease-in-out opacity-0 z-0 bg-charcoal">
+          <img src="https://i.ibb.co/zVHQJRL9/Whats-App-Image-2026-07-28-at-11-04-05-PM.jpg" alt="Luxury African Fashion" class="w-full h-full object-cover opacity-60 scale-100 transition-transform duration-[20000ms] ease-linear transform-gpu" style="object-position: center top;">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent z-20 pointer-events-none"></div>
       </div>
 
-      <div class="relative z-10 text-center px-6 max-w-5xl mx-auto animate-on-scroll">
-        <p class="text-gold uppercase tracking-[0.2em] text-sm md:text-base font-bold mb-6 drop-shadow-md bg-charcoal/40 inline-block px-4 py-2 rounded-full">
-          Timeless Style. Unmatched Confidence.
-        </p>
-        <h1 class="font-playfair text-5xl md:text-7xl lg:text-8xl text-ivory leading-tight mb-8">
-          Where Elegance<br><span class="italic font-light">Meets Excellence</span>
-        </h1>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
-          <a href="#collections" class="btn-primary w-full sm:w-auto text-center focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 btn-luxury px-8 py-4 min-h-[48px] flex items-center justify-center">Discover The Collection</a>
-          <a href="#order" class="w-full sm:w-auto text-center focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 btn-luxury text-charcoal px-8 py-4 bg-white border border-gold min-h-[48px]">Begin Your Bespoke Journey</a>
-        </div>
-        <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 text-white/80 text-xs sm:text-sm tracking-widest uppercase font-light animate-on-scroll delay-200">
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span>Worldwide Shipping</span>
-          </div>
-          <div class="hidden sm:block text-gold">•</div>
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-            </svg>
-            <span>Premium Craftsmanship</span>
-          </div>
-          <div class="hidden sm:block text-gold">•</div>
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>Perfect Fit Process</span>
-          </div>
+      <div class="relative z-30 text-center px-6 w-full max-w-5xl mx-auto flex flex-col items-center justify-center h-full fade-up in-view delay-200">
+        
+        <!-- Sliding Header Text Container -->
+        <div class="overflow-hidden h-[150px] md:h-[220px] lg:h-[260px] w-full relative mb-12">
+            <div id="hero-text-slider" class="absolute inset-x-0 transition-transform duration-[2000ms] ease-in-out transform translate-y-0 flex flex-col items-center justify-center h-full">
+                <!-- Slide 1 -->
+                <div class="text-slide w-full absolute inset-0 flex flex-col items-center justify-center transition-all duration-[2000ms] opacity-100 translate-y-0">
+                    <p class="text-gold uppercase tracking-[0.2em] text-xs md:text-sm font-bold mb-4 md:mb-6 drop-shadow-md bg-charcoal/60 inline-block px-4 py-2 rounded-full backdrop-blur-sm">
+                      M&B Fashion World
+                    </p>
+                    <h1 class="font-playfair text-5xl md:text-7xl lg:text-8xl text-ivory leading-tight drop-shadow-lg">
+                      Timeless <span class="italic font-light text-gold">Elegance</span>
+                    </h1>
+                </div>
+                <!-- Slide 2 -->
+                <div class="text-slide w-full absolute inset-0 flex flex-col items-center justify-center transition-all duration-[2000ms] opacity-0 translate-y-8 pointer-events-none">
+                    <p class="text-gold uppercase tracking-[0.2em] text-xs md:text-sm font-bold mb-4 md:mb-6 drop-shadow-md bg-charcoal/60 inline-block px-4 py-2 rounded-full backdrop-blur-sm">
+                      Custom Tailoring
+                    </p>
+                    <h1 class="font-playfair text-5xl md:text-7xl lg:text-8xl text-ivory leading-tight drop-shadow-lg">
+                      Perfect <span class="italic font-light text-gold">Fit</span>
+                    </h1>
+                </div>
+                <!-- Slide 3 -->
+                <div class="text-slide w-full absolute inset-0 flex flex-col items-center justify-center transition-all duration-[2000ms] opacity-0 translate-y-8 pointer-events-none">
+                    <p class="text-gold uppercase tracking-[0.2em] text-xs md:text-sm font-bold mb-4 md:mb-6 drop-shadow-md bg-charcoal/60 inline-block px-4 py-2 rounded-full backdrop-blur-sm">
+                      Global Delivery
+                    </p>
+                    <h1 class="font-playfair text-5xl md:text-7xl lg:text-8xl text-ivory leading-tight drop-shadow-lg">
+                      Worldwide <span class="italic font-light text-gold">Style</span>
+                    </h1>
+                </div>
+            </div>
         </div>
 
-        <!-- Trust Badges -->
-        <div class="mt-20 flex flex-wrap justify-center gap-8 md:gap-16 text-ivory/80 text-sm uppercase tracking-widest">
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold"></span>
-            Trusted by 500+ Clients
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold"></span>
-            Worldwide Delivery
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold"></span>
-            Perfect Fit Guarantee
-          </div>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mt-4 z-40">
+          <a href="#collections" class="btn-primary w-full sm:w-auto text-center focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 btn-luxury px-8 py-4 min-h-[48px] flex items-center justify-center shadow-luxury">Discover The Collection</a>
+          <a href="#order" class="w-full sm:w-auto text-center focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 btn-luxury text-charcoal px-8 py-4 bg-white/90 backdrop-blur-sm border border-gold min-h-[48px] flex items-center justify-center shadow-luxury">Begin Your Bespoke Journey</a>
         </div>
       </div>
     </section>
@@ -2233,7 +2233,7 @@ Additional Measurements:"></textarea>
             </div>
             <h3 class="font-playfair text-xl text-charcoal mb-4">Visit Us</h3>
             <p class="text-charcoal/70 font-light mb-6">
-              10 St Saviour Street<br>Off Upper Sakponba Road<br>Benin City,
+              <a href="https://www.google.com/search?q=10%20St%20Saviour%20Rd%2C%20Avbiama%2C%20Benin%20City%20300105%2C%20Edo&shem=epsd1%2Crimspwouoe&shndl=40&source=sh%2Fx%2Floc%2Fgeo%2Fm1%2F4&kgs=987c6fec50c19cab" target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors block">10 St Saviour Street<br>Off Upper Sakponba Road<br>Benin City,</a>
               Nigeria
             </p>
           </div>
@@ -2372,7 +2372,7 @@ Additional Measurements:"></textarea>
                   TikTok</a>
               </li>
               <li class="pt-2 text-white/50">
-                10 St Saviour Street<br>Benin City, Nigeria
+                <a href="https://www.google.com/search?q=10%20St%20Saviour%20Rd%2C%20Avbiama%2C%20Benin%20City%20300105%2C%20Edo&shem=epsd1%2Crimspwouoe&shndl=40&source=sh%2Fx%2Floc%2Fgeo%2Fm1%2F4&kgs=987c6fec50c19cab" target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors block">10 St Saviour Street<br>Benin City, Nigeria</a>
               </li>
             </ul>
           </div>
@@ -2784,4 +2784,58 @@ Additional Measurements:"></textarea>
      <path d="M12.031 0C5.385 0 0 5.388 0 12.037c0 2.128.555 4.195 1.611 6.012L.15 23.475l5.576-1.46c1.761.968 3.743 1.481 5.795 1.481h.01c6.645 0 12.035-5.387 12.035-12.036C23.565 5.388 18.18 0 12.031 0zm.01 21.498h-.008c-1.802 0-3.568-.485-5.112-1.401l-.367-.218-3.8.995.998-3.705-.239-.379a9.972 9.972 0 0 1-1.528-5.387c0-5.503 4.476-9.982 9.98-9.982 5.505 0 9.982 4.479 9.982 9.982 0 5.503-4.477 9.981-9.982 9.981zM17.5 14.156c-.302-.152-1.789-.884-2.066-.985-.276-.102-.477-.152-.678.152-.202.304-.779.985-.955 1.188-.176.202-.353.228-.654.076-1.54-.777-2.614-1.391-3.619-2.646-.263-.328.026-.307.319-.893.101-.202.05-.38-.025-.532-.075-.152-.678-1.636-.931-2.244-.246-.593-.497-.512-.678-.521-.176-.008-.378-.008-.579-.008s-.528.076-.805.38c-.277.304-1.055 1.03-1.055 2.511s1.08 2.912 1.231 3.115c.151.202 2.124 3.242 5.143 4.545.719.31 1.28.495 1.718.634.721.229 1.378.196 1.895.119.58-.087 1.789-.731 2.041-1.439.252-.708.252-1.314.176-1.439-.075-.125-.277-.201-.579-.353z"></path>
    </svg>
 </a>
-</body></html>
+
+    <!-- Slider Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Hero Image Slider
+        const slides = document.querySelectorAll('#hero-slider .hero-slide');
+        let currentSlide = 0;
+        
+        // Text Slider
+        const textSlides = document.querySelectorAll('#hero-text-slider .text-slide');
+
+        if(slides.length > 0 && textSlides.length > 0) {
+            // Initial state zoom
+            slides[0].querySelector('img').classList.add('scale-110');
+
+            setInterval(() => {
+                // Hide current slide
+                slides[currentSlide].classList.remove('opacity-100', 'z-10');
+                slides[currentSlide].classList.add('opacity-0', 'z-0');
+                
+    const oldSlideImg = slides[currentSlide].querySelector('img');
+    setTimeout(() => {
+        oldSlideImg.classList.remove('scale-110');
+    }, 2000); // Wait for fade out to finish before resetting scale
+    
+
+                textSlides[currentSlide].classList.remove('opacity-100', 'translate-y-0');
+                textSlides[currentSlide].classList.add('opacity-0', 'pointer-events-none', '-translate-y-8');
+    
+                const oldTextSlide = textSlides[currentSlide];
+                setTimeout(() => {
+                    oldTextSlide.classList.remove('-translate-y-8');
+                    oldTextSlide.classList.add('translate-y-8');
+                }, 2000); // Reset position after fade out
+
+                
+                // Move to next slide
+                currentSlide = (currentSlide + 1) % slides.length;
+                
+                // Show next slide
+                slides[currentSlide].classList.remove('opacity-0', 'z-0');
+                slides[currentSlide].classList.add('opacity-100', 'z-10');
+                // Trigger zoom animation
+                setTimeout(() => {
+                    slides[currentSlide].querySelector('img').classList.add('scale-110');
+                }, 50);
+
+                textSlides[currentSlide].classList.remove('opacity-0', 'pointer-events-none', 'translate-y-8', '-translate-y-8');
+                textSlides[currentSlide].classList.add('opacity-100', 'translate-y-0');
+            }, 12000);
+        }
+      });
+    </script>
+
+  </body></html>
