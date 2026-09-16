@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "M&B Fashion World",
+  "description": "Luxury African Fashion House specializing in custom bespoke tailored dresses shipped worldwide.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
