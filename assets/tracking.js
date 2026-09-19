@@ -203,6 +203,7 @@
       // WhatsApp Contact / Order Clicks
       if (href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp.com') !== -1 || id === 'wa-widget-send' || id === 'wa-widget-toggle') {
         MBTracker.trackContact('WhatsApp', text || 'WhatsApp Contact');
+        MBTracker.trackLead('WhatsApp Order Inquiry', 'WhatsApp CTA', { content_name: text || 'WhatsApp CTA' });
       }
       // Phone Call Clicks
       else if (href.indexOf('tel:') === 0) {
