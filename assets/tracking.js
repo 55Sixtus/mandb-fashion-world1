@@ -1,23 +1,20 @@
 /**
  * M&B Fashion World - Meta Pixel & Ads Event Tracking Utility
  * -------------------------------------------------------------
- * Production-ready event tracking integration for Meta Pixel (Meta Dataset).
- * Loads Meta Pixel globally, reads Pixel ID safely from env/window, and provides
- * reusable tracking functions for ViewContent, Lead, CompleteRegistration,
- * InitiateCheckout, Purchase, and Contact events.
+ * Clean, compliant event tracking integration for Meta Pixel (Dataset ID: 1090968366739169).
+ * Strictly enforces event triggers: PageView on load, ViewContent on collection view,
+ * Contact on WhatsApp/Phone/Email click, and Lead strictly on successful form submission.
  */
 
 (function () {
   'use strict';
 
-  // 1. Resolve Meta Pixel ID from window or environment, defaulting to target ID if available
   var rawPixelId = window.META_PIXEL_ID || (typeof process !== 'undefined' && process.env && process.env.META_PIXEL_ID) || '1090968366739169';
-  var pixelId = (rawPixelId && rawPixelId !== 'YOUR_META_PIXEL_ID' && rawPixelId.trim().length > 0) ? rawPixelId.trim() : '';
+  var pixelId = (rawPixelId && rawPixelId !== 'YOUR_META_PIXEL_ID' && rawPixelId.trim().length > 0) ? rawPixelId.trim() : '1090968366739169';
 
-  // Expose resolved Pixel ID globally
   window.META_PIXEL_ID = pixelId;
 
-  // 2. Single Global Meta Pixel Initializer (Failsafe & Non-blocking)
+  // 1. Single Global Meta Pixel Initializer
   if (pixelId) {
     if (!window.fbq) {
       !function(f,b,e,v,n,t,s) {
@@ -49,17 +46,16 @@
       }
     }
   } else {
-    // If Pixel ID is missing, create a silent stub so calls never crash the app
     if (typeof window.fbq !== 'function') {
       window.fbq = function () {
         if (window.console && console.debug) {
-          console.debug('[MetaPixel Stub] Call skipped (No Pixel ID configured):', arguments);
+          console.debug('[MetaPixel Stub] Call skipped:', arguments);
         }
       };
     }
   }
 
-  // 3. Safe Event Dispatcher
+  // 2. Safe Event Dispatcher
   function safeFbq(action, eventName, params) {
     if (typeof window.fbq === 'function') {
       try {
@@ -69,25 +65,26 @@
           window.fbq(action, eventName);
         }
       } catch (err) {
-        // Silently catch tracking errors if adblockers or network filters interfere
+        // Silently catch tracking errors
       }
     }
   }
 
-  // 4. Reusable Tracking API
+  // 3. Centralized Tracking API
   var MBTracker = {
     pixelId: pixelId,
 
-    // PageView
+    // PageView (Fired once on actual page view)
     trackPageView: function (pageData) {
       safeFbq('track', 'PageView', pageData || null);
     },
 
-    // ViewContent (Products / Collections / Gallery)
+    // ViewContent (Fired ONLY when visitor meaningfully views a collection/product/content section)
     trackViewContent: function (contentName, contentCategory, extraParams) {
       var params = {
-        content_name: contentName || 'Bespoke Collection',
-        content_category: contentCategory || 'Luxury Fashion'
+        content_name: contentName || 'Bespoke African Collection',
+        content_category: contentCategory || 'African Fashion',
+        content_type: 'product'
       };
       if (extraParams && typeof extraParams === 'object') {
         for (var key in extraParams) {
@@ -99,75 +96,13 @@
       safeFbq('track', 'ViewContent', params);
     },
 
-    // Lead (Inquiries & Form Submissions)
-    trackLead: function (leadType, leadSource, extraParams) {
-      var params = {
-        content_name: leadType || 'Bespoke Order Inquiry',
-        content_category: leadSource || 'Order Form',
-        value: 0.00,
-        currency: 'USD'
-      };
-      if (extraParams && typeof extraParams === 'object') {
-        for (var k in extraParams) {
-          if (extraParams.hasOwnProperty(k)) params[k] = extraParams[k];
-        }
-      }
-      safeFbq('track', 'Lead', params);
-    },
-
-    // CompleteRegistration (Client Registration / Currency Selection / Form Opt-in)
-    trackCompleteRegistration: function (registrationMethod, extraParams) {
-      var params = {
-        content_name: 'Client Registration',
-        status: true,
-        registration_method: registrationMethod || 'Website Form'
-      };
-      if (extraParams && typeof extraParams === 'object') {
-        for (var k in extraParams) {
-          if (extraParams.hasOwnProperty(k)) params[k] = extraParams[k];
-        }
-      }
-      safeFbq('track', 'CompleteRegistration', params);
-    },
-
-    // InitiateCheckout (CTA clicks to order section or custom order flow)
-    trackInitiateCheckout: function (numItems, currency, value, extraParams) {
-      var params = {
-        content_name: 'Bespoke Order Customization',
-        content_category: 'Tailoring Service',
-        num_items: numItems || 1,
-        currency: currency || 'USD',
-        value: typeof value === 'number' ? value : 0.00
-      };
-      if (extraParams && typeof extraParams === 'object') {
-        for (var k in extraParams) {
-          if (extraParams.hasOwnProperty(k)) params[k] = extraParams[k];
-        }
-      }
-      safeFbq('track', 'InitiateCheckout', params);
-    },
-
-    // Purchase (Confirmed Orders / Deposit Payment Intent)
-    trackPurchase: function (value, currency, contentName, extraParams) {
-      var params = {
-        content_name: contentName || 'Bespoke Order Booking',
-        content_type: 'product',
-        value: typeof value === 'number' ? value : 0.00,
-        currency: currency || 'USD'
-      };
-      if (extraParams && typeof extraParams === 'object') {
-        for (var k in extraParams) {
-          if (extraParams.hasOwnProperty(k)) params[k] = extraParams[k];
-        }
-      }
-      safeFbq('track', 'Purchase', params);
-    },
-
-    // Contact (WhatsApp, Phone, Email, Direct Contact CTAs)
+    // Contact (Fired ONLY when visitor intentionally clicks WhatsApp, Phone, or Email)
     trackContact: function (contactMethod, contactLabel, extraParams) {
+      var method = (contactMethod || 'whatsapp').toLowerCase();
       var params = {
         content_name: contactLabel || 'Customer Inquiry',
-        content_category: contactMethod || 'Direct Communication'
+        contact_method: method,
+        contact_destination: method
       };
       if (extraParams && typeof extraParams === 'object') {
         for (var k in extraParams) {
@@ -177,77 +112,53 @@
       safeFbq('track', 'Contact', params);
     },
 
-    // Custom Event
-    trackCustom: function (eventName, params) {
-      if (eventName) {
-        safeFbq('trackCustom', eventName, params || null);
+    // Lead (Fired ONLY after a visitor successfully submits a genuine inquiry form)
+    trackLead: function (leadType, leadSource, extraParams) {
+      var params = {
+        content_name: leadType || 'Custom Order Inquiry',
+        content_category: leadSource || 'Bespoke Order Form',
+        lead_type: 'fashion_consultation',
+        currency: 'USD',
+        value: 0.00
+      };
+      if (extraParams && typeof extraParams === 'object') {
+        for (var k in extraParams) {
+          if (extraParams.hasOwnProperty(k)) params[k] = extraParams[k];
+        }
       }
+      safeFbq('track', 'Lead', params);
     }
   };
 
-  // Expose globally under MBTracker and MetaPixelTracker alias
   window.MBTracker = MBTracker;
   window.MetaPixelTracker = MBTracker;
 
-  // 5. Automatic Event Binding on DOMContentLoaded
+  // 4. Automatic Event Binding on DOMContentLoaded
   document.addEventListener('DOMContentLoaded', function () {
-    // A. Intercept CTA Clicks throughout the page
+    // A. Intercept Genuine Contact Clicks (WhatsApp, Phone, Email)
     document.addEventListener('click', function (e) {
       var target = e.target.closest('a, button');
       if (!target) return;
 
       var href = (target.getAttribute('href') || '').toLowerCase();
       var id = (target.getAttribute('id') || '').toLowerCase();
-      var text = (target.textContent || '').trim();
+      var text = (target.textContent || '').trim().replace(/\s+/g, ' ');
 
-      // WhatsApp Contact / Order Clicks
+      // WhatsApp Clicks -> Fire Contact ONLY
       if (href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp.com') !== -1 || id === 'wa-widget-send' || id === 'wa-widget-toggle') {
-        MBTracker.trackContact('WhatsApp', text || 'WhatsApp Contact');
-        MBTracker.trackLead('WhatsApp Order Inquiry', 'WhatsApp CTA', { content_name: text || 'WhatsApp CTA' });
+        MBTracker.trackContact('whatsapp', text || 'WhatsApp Contact');
       }
-      // Phone Call Clicks
+      // Phone Call Clicks -> Fire Contact ONLY
       else if (href.indexOf('tel:') === 0) {
-        MBTracker.trackContact('Phone', text || 'Direct Phone Call');
+        MBTracker.trackContact('phone', text || 'Direct Phone Call');
       }
-      // Email Clicks
+      // Email Clicks -> Fire Contact ONLY
       else if (href.indexOf('mailto:') === 0) {
-        MBTracker.trackContact('Email', text || 'Direct Email Contact');
-      }
-      // Order Journey CTAs (Begin Journey, Place Custom Order, Tailor This Look)
-      else if (
-        href === '#order' ||
-        text.indexOf('Begin Your Bespoke Journey') !== -1 ||
-        text.indexOf('Place Custom Order') !== -1 ||
-        text.indexOf('Place My Custom Order') !== -1 ||
-        text.indexOf('Tailor This Look') !== -1 ||
-        text.indexOf('Begin Your Journey') !== -1
-      ) {
-        MBTracker.trackInitiateCheckout(1, 'USD', 0, { content_name: text || 'Bespoke CTA Click' });
-      }
-      // Collection View CTAs
-      else if (
-        href === '#collections' ||
-        text.indexOf('Discover The Collection') !== -1 ||
-        text.indexOf('Our Collections') !== -1 ||
-        text.indexOf('Catalog') !== -1
-      ) {
-        MBTracker.trackViewContent(text || 'Collection Navigation', 'Bespoke Apparel');
+        MBTracker.trackContact('email', text || 'Direct Email Contact');
       }
     }, true);
 
-    // B. Track Currency Selection as CompleteRegistration
-    var desktopCurr = document.getElementById('desktopCurrencySelect');
-    var mobileCurr = document.getElementById('mobileCurrencySelect');
-
-    function onCurrencyChange(e) {
-      if (e && e.target) {
-        MBTracker.trackCompleteRegistration('Currency Selection: ' + e.target.value);
-      }
-    }
-    if (desktopCurr) desktopCurr.addEventListener('change', onCurrencyChange);
-    if (mobileCurr) mobileCurr.addEventListener('change', onCurrencyChange);
-
-    // C. Intersection Observer for Section Views
+    // B. ViewContent via IntersectionObserver (Fires ONLY when Collections or Gallery enter viewport)
     if ('IntersectionObserver' in window) {
       var trackedSections = {};
       var observer = new IntersectionObserver(function (entries) {
@@ -256,35 +167,22 @@
             var sectionId = entry.target.id;
             if (sectionId && !trackedSections[sectionId]) {
               trackedSections[sectionId] = true;
-              var titleMap = {
-                'collections': 'Bespoke Fashion Collections',
-                'gallery': 'Fashion World Gallery',
-                'about': 'About M&B Fashion House',
-                'order': 'Bespoke Order Booking Section'
-              };
-              MBTracker.trackViewContent(titleMap[sectionId] || sectionId, 'Section View');
-
-              if (sectionId === 'order') {
-                MBTracker.trackInitiateCheckout(1, 'USD', 0, { content_name: 'Scroll to Bespoke Order Form' });
+              if (sectionId === 'collections') {
+                MBTracker.trackViewContent('Signature African Collections', 'African Fashion');
+              } else if (sectionId === 'gallery') {
+                MBTracker.trackViewContent('Fashion Gallery & Lookbook', 'African Fashion');
               }
             }
           }
         });
       }, { threshold: 0.3 });
 
-      var sectionIds = ['collections', 'gallery', 'about', 'order'];
-      sectionIds.forEach(function (id) {
+      ['collections', 'gallery'].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) observer.observe(el);
       });
     }
-
-    // D. Single Page Navigation / Hash Change PageView Tracker
-    window.addEventListener('hashchange', function () {
-      if (window.location.hash) {
-        MBTracker.trackPageView({ content_name: 'Section: ' + window.location.hash.substring(1) });
-      }
-    });
   });
 
 })();
+
