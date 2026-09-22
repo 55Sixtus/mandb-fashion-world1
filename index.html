@@ -44,7 +44,7 @@
 
 <!-- Performance Styles -->
 <style>
-::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#faf6f0}::-webkit-scrollbar-thumb{background:#c9a227;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#b08d22}#scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(to right,#d4af37,#e2c262,#c29b2b);z-index:1000;width:0%;transition:width .1s ease-out;will-change:width;}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#faf6f0}::-webkit-scrollbar-thumb{background:#c9a227;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#b08d22}#scroll-progress{pointer-events:none;position:fixed;top:0;left:0;height:3px;background:linear-gradient(to right,#d4af37,#e2c262,#c29b2b);z-index:1000;width:0%;transition:width .1s ease-out;will-change:width;}
 .glass-nav{background:rgba(255,253,248,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(201,162,39,0.2);transition:all 0.3s ease;}
 .dark .glass-nav{background:rgba(18,18,18,0.95)!important;border-bottom:1px solid rgba(201,162,39,0.3)!important;}
 .nav-scrolled{background:rgba(255,253,248,0.95)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;box-shadow:0 4px 30px rgba(0,0,0,0.06)!important;border-bottom:1px solid rgba(201,162,39,0.25)!important;}
@@ -152,7 +152,96 @@ img.loading-skeleton {
 <script>window.META_PIXEL_ID = window.META_PIXEL_ID || '1090968366739169';</script>
 <script src="assets/tracking.js" defer></script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1090968366739169&ev=PageView&noscript=1"></noscript>
-</head><body class="font-poppins antialiased"><header class="sticky top-0 z-50 w-full shadow-md" id="main-header">
+<script>
+// Global Single-Source Handlers for UI Events
+window.toggleTheme = function(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err){} }
+  const root = document.documentElement;
+  const isDark = root.classList.toggle('dark');
+  try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(err) {}
+  
+  const sunIcons = document.querySelectorAll('#sunIconDesktop, #sunIconMobile');
+  const moonIcons = document.querySelectorAll('#moonIconDesktop, #moonIconMobile');
+  if (isDark) {
+    sunIcons.forEach(el => el.classList.remove('hidden'));
+    moonIcons.forEach(el => el.classList.add('hidden'));
+  } else {
+    sunIcons.forEach(el => el.classList.add('hidden'));
+    moonIcons.forEach(el => el.classList.remove('hidden'));
+  }
+};
+
+window.toggleMobileMenu = function(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err){} }
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+  const hamburgerIcon = document.getElementById('hamburgerIcon');
+  const closeIcon = document.getElementById('closeIcon');
+  if (!mobileMenu) return;
+
+  const isClosed = mobileMenu.classList.contains('hidden') || mobileMenu.classList.contains('scale-y-0');
+
+  if (isClosed) {
+    mobileMenu.classList.remove('hidden', 'scale-y-0', 'opacity-0', 'pointer-events-none');
+    mobileMenu.classList.add('scale-y-100', 'opacity-100', 'pointer-events-auto');
+    if (mobileMenuBackdrop) {
+      mobileMenuBackdrop.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+      mobileMenuBackdrop.classList.add('opacity-100', 'pointer-events-auto');
+    }
+    if (hamburgerIcon) hamburgerIcon.classList.add('hidden');
+    if (closeIcon) closeIcon.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  } else {
+    window.closeMobileMenu();
+  }
+};
+
+window.closeMobileMenu = function() {
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+  const hamburgerIcon = document.getElementById('hamburgerIcon');
+  const closeIcon = document.getElementById('closeIcon');
+  if (!mobileMenu) return;
+
+  mobileMenu.classList.add('scale-y-0', 'opacity-0', 'pointer-events-none');
+  mobileMenu.classList.remove('scale-y-100', 'opacity-100', 'pointer-events-auto');
+  setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+
+  if (mobileMenuBackdrop) {
+    mobileMenuBackdrop.classList.add('opacity-0', 'pointer-events-none');
+    mobileMenuBackdrop.classList.remove('opacity-100', 'pointer-events-auto');
+    setTimeout(() => mobileMenuBackdrop.classList.add('hidden'), 300);
+  }
+  if (hamburgerIcon) hamburgerIcon.classList.remove('hidden');
+  if (closeIcon) closeIcon.classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+};
+
+window.toggleWaPopup = function(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err){} }
+  const waPopup = document.getElementById('wa-widget-popup');
+  const waTeaser = document.getElementById('wa-widget-teaser');
+  const waInput = document.getElementById('wa-widget-input');
+  
+  // Directly open WhatsApp chat window in a new tab for instant consultation redirect
+  window.open('https://wa.me/2348160761870?text=' + encodeURIComponent('Hello M&B Fashion World, I want to inquire about custom designs and fitting.'), '_blank');
+
+  if (!waPopup) return;
+  const isClosed = waPopup.classList.contains('hidden') || waPopup.classList.contains('scale-0');
+
+  if (isClosed) {
+    waPopup.classList.remove('hidden', 'scale-0', 'opacity-0', 'pointer-events-none');
+    waPopup.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+    if (waTeaser) waTeaser.style.display = 'none';
+    if (waInput) setTimeout(() => waInput.focus(), 300);
+  } else {
+    waPopup.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
+    waPopup.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+    setTimeout(() => waPopup.classList.add('hidden'), 300);
+  }
+};
+</script>
+</head><body class="font-poppins antialiased"><header class="sticky top-0 z-[99990] w-full shadow-md" id="main-header">
   <!-- Announcement Bar -->
   <div class="ticker-wrap bg-gold text-charcoal py-2 shadow-sm border-b border-black/10 font-sans font-bold text-xs sm:text-sm select-none" id="announcement-bar">
     <div class="ticker-track">
@@ -219,7 +308,7 @@ img.loading-skeleton {
           </div>
 
           <!-- Theme Toggle Desktop -->
-          <button id="themeToggleDesktop" class="flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 rounded-full bg-champagne/90 dark:bg-[#242424] border-2 border-gold/60 dark:border-gold/80 text-charcoal dark:text-ivory shadow-sm hover:border-gold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold cursor-pointer shrink-0" aria-label="Toggle Dark Mode">
+          <button id="themeToggleDesktop" onclick="window.toggleTheme(event)" class="relative z-[100001] pointer-events-auto flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 rounded-full bg-champagne/90 dark:bg-[#242424] border-2 border-gold/60 dark:border-gold/80 text-charcoal dark:text-ivory shadow-sm hover:border-gold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold cursor-pointer shrink-0" aria-label="Toggle Dark Mode">
             <svg id="sunIconDesktop" class="w-4 h-4 text-gold shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             <svg id="moonIconDesktop" class="w-4 h-4 text-gold hidden shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
             <span class="text-xs font-bold tracking-wider uppercase text-charcoal dark:text-ivory hidden xl:inline">Theme</span>
@@ -247,17 +336,17 @@ img.loading-skeleton {
           </div>
 
           <!-- Mobile Theme Toggle -->
-          <button id="themeToggleMobile" class="flex items-center justify-center p-2 rounded-xl bg-champagne/90 dark:bg-[#242424] border border-gold/60 text-gold shadow-sm shrink-0 min-h-[38px] min-w-[38px]" aria-label="Toggle Dark Mode Mobile">
+          <button id="themeToggleMobile" onclick="window.toggleTheme(event)" class="relative z-[100001] pointer-events-auto flex items-center justify-center p-2 rounded-xl bg-champagne/90 dark:bg-[#242424] border border-gold/60 text-gold shadow-sm shrink-0 min-h-[38px] min-w-[38px]" aria-label="Toggle Dark Mode Mobile">
             <svg id="sunIconMobile" class="w-4 h-4 text-gold shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             <svg id="moonIconMobile" class="w-4 h-4 text-gold hidden shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
           </button>
 
           <!-- Mobile Menu Toggle Button -->
-          <button id="mobileMenuBtn" class="text-charcoal dark:text-ivory p-2 rounded-xl bg-gold/10 dark:bg-gold/20 border border-gold/50 min-h-[38px] min-w-[38px] flex items-center justify-center cursor-pointer shrink-0 transition-transform active:scale-95" aria-label="Open mobile menu">
-            <svg id="hamburgerIcon" class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button id="mobileMenuBtn" onclick="window.toggleMobileMenu(event)" class="relative z-[100001] pointer-events-auto text-charcoal dark:text-ivory p-2 rounded-xl bg-gold/10 dark:bg-gold/20 border border-gold/50 min-h-[38px] min-w-[38px] flex items-center justify-center cursor-pointer shrink-0 transition-transform active:scale-95" aria-label="Open mobile menu">
+            <svg id="hamburgerIcon" class="w-6 h-6 text-gold pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
-            <svg id="closeIcon" class="w-6 h-6 text-gold hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg id="closeIcon" class="w-6 h-6 text-gold hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
@@ -267,10 +356,10 @@ img.loading-skeleton {
     </div>
 
     <!-- Mobile Menu Dark Backdrop Overlay -->
-    <div id="mobileMenuBackdrop" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[99980] transition-opacity duration-300 opacity-0 pointer-events-none" aria-hidden="true"></div>
+    <div id="mobileMenuBackdrop" onclick="window.closeMobileMenu()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[99980] transition-opacity duration-300 opacity-0 pointer-events-none hidden" aria-hidden="true"></div>
 
     <!-- Mobile Dropdown Drawer (Solid Background, Zero Text Overlap) -->
-    <div id="mobileMenu" class="absolute top-full left-0 right-0 lg:hidden bg-[#FFFDF8] dark:bg-[#121212] border-b-2 border-gold/50 px-4 sm:px-6 py-5 transition-all duration-300 transform scale-y-0 opacity-0 pointer-events-none origin-top flex flex-col space-y-4 shadow-2xl z-[100000] rounded-b-3xl max-h-[calc(100vh-70px)] overflow-y-auto">
+    <div id="mobileMenu" class="absolute top-full left-0 right-0 lg:hidden bg-[#FFFDF8] dark:bg-[#121212] border-b-2 border-gold/50 px-4 sm:px-6 py-5 transition-all duration-300 transform scale-y-0 opacity-0 pointer-events-none hidden origin-top flex flex-col space-y-4 shadow-2xl z-[100000] rounded-b-3xl max-h-[calc(100vh-70px)] overflow-y-auto">
       <!-- Top Atelier Header Banner -->
       <div class="flex items-center justify-between pb-3 border-b border-gold/20">
         <div class="flex items-center gap-2">
@@ -627,7 +716,7 @@ Additional Measurements:"></textarea></div></div><div class="mb-12"><h4 class="f
   </div>
 
   <!-- Popup Chat Window -->
-  <div id="wa-widget-popup" class="scale-0 opacity-0 pointer-events-none transition-all duration-300 origin-bottom-right w-80 sm:w-96 bg-white dark:bg-[#1a1a1a] rounded-2xl shadow-2xl border-2 border-gold/60 overflow-hidden flex flex-col z-[10000]">
+  <div id="wa-widget-popup" class="scale-0 opacity-0 pointer-events-none hidden transition-all duration-300 origin-bottom-right w-80 sm:w-96 bg-white dark:bg-[#1a1a1a] rounded-2xl shadow-2xl border-2 border-gold/60 overflow-hidden flex flex-col z-[10000]">
     <!-- Header -->
     <div class="bg-gradient-to-r from-[#0f5238] via-[#128C7E] to-[#0f5238] text-white p-4 flex items-center justify-between border-b border-gold/40">
       <div class="flex items-center gap-3">
@@ -664,7 +753,7 @@ Additional Measurements:"></textarea></div></div><div class="mb-12"><h4 class="f
   </div>
 
   <!-- Toggle Button (#wa-widget-toggle) -->
-  <button id="wa-widget-toggle" class="relative group flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-[1.5rem] bg-gradient-to-r from-[#25D366] via-[#128C7E] to-[#25D366] text-white shadow-[0_4px_12px_rgba(0,0,0,0.15)] border-2 border-gold/80 hover:scale-105 hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(201,162,39,0.45)] active:scale-95 transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 cursor-pointer z-[9999]" aria-label="Open WhatsApp Chat">
+  <button id="wa-widget-toggle" onclick="window.toggleWaPopup(event)" class="relative z-[100001] pointer-events-auto relative group flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-[1.5rem] bg-gradient-to-r from-[#25D366] via-[#128C7E] to-[#25D366] text-white shadow-[0_4px_12px_rgba(0,0,0,0.15)] border-2 border-gold/80 hover:scale-110 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(201,162,39,0.6)] active:scale-95 transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 cursor-pointer z-[9999]" aria-label="Open WhatsApp Chat">
     <!-- Pulsing Glow Ring -->
     <span class="absolute -inset-1 rounded-[1.5rem] bg-[#25D366] opacity-35 animate-ping pointer-events-none group-hover:opacity-60 transition-opacity"></span>
     <!-- Notification Badge -->
@@ -678,100 +767,33 @@ Additional Measurements:"></textarea></div></div><div class="mb-12"><h4 class="f
 
 <button id="scrollToTopBtn" class="fixed bottom-24 right-6 bg-charcoal text-gold p-4 rounded-full shadow-luxury hover:bg-gold hover:text-charcoal dark:hover:text-charcoal transition-all duration-300 z-50 flex items-center justify-center opacity-0 pointer-events-none border border-gold/30 focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 min-h-[48px]" aria-label="Scroll to top"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg></button><script>
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Mobile Menu Handler with Clean Backdrop and Lock Body Scroll
-  const mobileBtn = document.getElementById("mobileMenuBtn");
-  const mobileMenu = document.getElementById("mobileMenu");
-  const mobileMenuBackdrop = document.getElementById("mobileMenuBackdrop");
-  const hamburgerIcon = document.getElementById("hamburgerIcon");
-  const closeIcon = document.getElementById("closeIcon");
+  // 1. Mobile Menu Links
   const mobileLinks = document.querySelectorAll(".mobile-link");
-
-  function openMobileMenu() {
-    if (!mobileMenu) return;
-    mobileMenu.classList.remove("scale-y-0", "opacity-0", "pointer-events-none");
-    if (mobileMenuBackdrop) {
-      mobileMenuBackdrop.classList.remove("opacity-0", "pointer-events-none");
-      mobileMenuBackdrop.classList.add("opacity-100");
-    }
-    if (hamburgerIcon) hamburgerIcon.classList.add("hidden");
-    if (closeIcon) closeIcon.classList.remove("hidden");
-    document.body.classList.add("overflow-hidden");
+  const mobileMenuBackdrop = document.getElementById("mobileMenuBackdrop");
+  if (mobileMenuBackdrop) {
+    mobileMenuBackdrop.addEventListener("click", () => window.closeMobileMenu());
   }
+  mobileLinks.forEach(link => {
+    link.addEventListener("click", () => window.closeMobileMenu());
+  });
 
-  function closeMobileMenu() {
-    if (!mobileMenu) return;
-    mobileMenu.classList.add("scale-y-0", "opacity-0", "pointer-events-none");
-    if (mobileMenuBackdrop) {
-      mobileMenuBackdrop.classList.add("opacity-0", "pointer-events-none");
-      mobileMenuBackdrop.classList.remove("opacity-100");
-    }
-    if (hamburgerIcon) hamburgerIcon.classList.remove("hidden");
-    if (closeIcon) closeIcon.classList.add("hidden");
-    document.body.classList.remove("overflow-hidden");
+  // 2. Initial Theme Setup
+  const savedTheme = localStorage.getItem("theme");
+  const isDarkMode = savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  if (isDarkMode) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
   }
-
-  window.closeMobileMenu = closeMobileMenu;
-
-  if (mobileBtn && mobileMenu) {
-    mobileBtn.addEventListener("click", () => {
-      const isOpen = !mobileMenu.classList.contains("pointer-events-none");
-      if (isOpen) {
-        closeMobileMenu();
-      } else {
-        openMobileMenu();
-      }
-    });
-
-    if (mobileMenuBackdrop) {
-      mobileMenuBackdrop.addEventListener("click", closeMobileMenu);
-    }
-
-    mobileLinks.forEach(link => {
-      link.addEventListener("click", () => {
-        closeMobileMenu();
-      });
-    });
-  }
-
-  // 2. Theme Toggle Handler (Desktop & Mobile)
-  const root = document.documentElement;
   const sunIcons = document.querySelectorAll("#sunIconDesktop, #sunIconMobile");
   const moonIcons = document.querySelectorAll("#moonIconDesktop, #moonIconMobile");
-  const themeToggles = document.querySelectorAll("#themeToggleDesktop, #themeToggleMobile");
-
-  function updateThemeIcons(isDark) {
-    if (isDark) {
-      sunIcons.forEach(el => el.classList.remove("hidden"));
-      moonIcons.forEach(el => el.classList.add("hidden"));
-    } else {
-      sunIcons.forEach(el => el.classList.add("hidden"));
-      moonIcons.forEach(el => el.classList.remove("hidden"));
-    }
-  }
-
-  const savedTheme = localStorage.getItem("theme");
-  let isDarkMode = savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
-
   if (isDarkMode) {
-    root.classList.add("dark");
+    sunIcons.forEach(el => el.classList.remove("hidden"));
+    moonIcons.forEach(el => el.classList.add("hidden"));
   } else {
-    root.classList.remove("dark");
+    sunIcons.forEach(el => el.classList.add("hidden"));
+    moonIcons.forEach(el => el.classList.remove("hidden"));
   }
-  updateThemeIcons(isDarkMode);
-
-  themeToggles.forEach(btn => {
-    btn.addEventListener("click", () => {
-      isDarkMode = !isDarkMode;
-      if (isDarkMode) {
-        root.classList.add("dark");
-        localStorage.setItem("theme", "dark");
-      } else {
-        root.classList.remove("dark");
-        localStorage.setItem("theme", "light");
-      }
-      updateThemeIcons(isDarkMode);
-    });
-  });
 
   // 3. Currency Selector Handler
   const desktopSelect = document.getElementById("desktopCurrencySelect");
@@ -792,7 +814,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const converted = basePrice * config.rate;
         let formatted = curr === "NGN" ? converted.toLocaleString("en-NG", { maximumFractionDigits: 0 }) : converted.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
         const val = config.prefix ? config.symbol + formatted : formatted + " " + config.symbol;
-        el.innerText = `Starting from ${val}`;
+        el.innerText = "Starting from " + val;
       });
       if (desktopSelect && desktopSelect.value !== curr) desktopSelect.value = curr;
       if (mobileSelect && mobileSelect.value !== curr) mobileSelect.value = curr;
@@ -882,13 +904,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll(".stat-counter").forEach(el => counterObserver.observe(el));
 
-  // 6. Floating WhatsApp Widget Script
-  const waToggle = document.getElementById("wa-widget-toggle");
-  const waClose = document.getElementById("wa-widget-close");
-  const waPopup = document.getElementById("wa-widget-popup");
+  // 6. Floating WhatsApp Widget Time & Interactivity
   const waSendBtn = document.getElementById("wa-widget-send");
   const waInput = document.getElementById("wa-widget-input");
   const waTime = document.getElementById("wa-time");
+  const waClose = document.getElementById("wa-widget-close");
   const waTeaser = document.getElementById("wa-widget-teaser");
   const waTeaserClose = document.getElementById("wa-teaser-close");
 
@@ -898,48 +918,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const ampm = hours >= 12 ? "PM" : "AM";
   hours = hours % 12 || 12;
   mins = mins < 10 ? "0" + mins : mins;
-  if (waTime) waTime.innerText = `${hours}:${mins} ${ampm}`;
-
-  function toggleWaPopup() {
-    if (!waPopup) return;
-    if (waPopup.classList.contains("scale-0")) {
-      waPopup.classList.remove("scale-0", "opacity-0", "pointer-events-none");
-      waPopup.classList.add("scale-100", "opacity-100", "pointer-events-auto");
-      
-      if (waTeaser) waTeaser.style.display = "none";
-      const badge = waToggle ? waToggle.querySelector("span.animate-bounce") : null;
-      if (badge) badge.style.display = "none";
-      const ring = waToggle ? waToggle.querySelector("span.animate-ping") : null;
-      if (ring) ring.style.display = "none";
-      
-      setTimeout(() => waInput && waInput.focus(), 300);
-    } else {
-      waPopup.classList.add("scale-0", "opacity-0", "pointer-events-none");
-      waPopup.classList.remove("scale-100", "opacity-100", "pointer-events-auto");
-    }
-  }
+  if (waTime) waTime.innerText = hours + ":" + mins + " " + ampm;
 
   function sendWaMessage() {
     const text = waInput && waInput.value.trim() ? waInput.value.trim() : "Hello M&B Fashion World, I want to order a custom outfit.";
-    const url = `https://wa.me/2348160761870?text=${encodeURIComponent(text)}`;
+    const url = "https://wa.me/2348160761870?text=" + encodeURIComponent(text);
     window.open(url, "_blank");
     if (waInput) waInput.value = "";
-    toggleWaPopup();
   }
 
-  if (waToggle) waToggle.addEventListener("click", toggleWaPopup);
-  if (waTeaser) waTeaser.addEventListener("click", (e) => {
-    if (e.target !== waTeaserClose && !waTeaserClose.contains(e.target)) {
-      toggleWaPopup();
-    }
-  });
+  if (waTeaser) {
+    waTeaser.addEventListener("click", (e) => {
+      if (e.target !== waTeaserClose && !waTeaserClose.contains(e.target)) {
+        sendWaMessage();
+      }
+    });
+  }
   if (waTeaserClose) {
     waTeaserClose.addEventListener("click", (e) => {
       e.stopPropagation();
       if (waTeaser) waTeaser.style.display = "none";
     });
   }
-  if (waClose) waClose.addEventListener("click", toggleWaPopup);
+  if (waClose) {
+    waClose.addEventListener("click", (e) => {
+      const waPopup = document.getElementById("wa-widget-popup");
+      if (waPopup) {
+        waPopup.classList.add("scale-0", "opacity-0", "pointer-events-none");
+        waPopup.classList.remove("scale-100", "opacity-100", "pointer-events-auto");
+        setTimeout(() => waPopup.classList.add("hidden"), 300);
+      }
+    });
+  }
   if (waSendBtn) waSendBtn.addEventListener("click", sendWaMessage);
   if (waInput) {
     waInput.addEventListener("keypress", (e) => {
@@ -1010,10 +1020,36 @@ document.addEventListener("DOMContentLoaded", () => {
     printOrderBtn.addEventListener("click", () => {
       if (!window.currentOrderData) return;
       const data = window.currentOrderData;
-      const htmlContent = `<!DOCTYPE html><html><head><title>Receipt - M&B Fashion World</title><style>body{font-family:sans-serif;padding:30px;color:#333;}.header{border-bottom:2px solid #C9A227;padding-bottom:10px;margin-bottom:20px;}h1{color:#C9A227;margin:0;font-size:20px;}.row{margin-bottom:8px;}.label{font-weight:bold;width:140px;display:inline-block;}.footer{margin-top:30px;font-size:12px;color:#888;border-top:1px solid #eee;padding-top:10px;}</style></head><body><div class="header"><h1>M&B Fashion World - Order Receipt</h1><div>Date: ${new Date().toLocaleDateString()}</div></div><div class="row"><span class="label">Client Name:</span>${data.name || 'N/A'}</div><div class="row"><span class="label">WhatsApp:</span>${data.whatsapp || 'N/A'}</div><div class="row"><span class="label">Outfit Type:</span>${data.outfit_type || 'N/A'}</div><div class="row"><span class="label">Deadline:</span>${data.deadline || 'N/A'}</div><div class="row"><span class="label">Notes:</span>${data.notes || 'None'}</div><div class="footer"><p>Thank you for choosing M&B Fashion World.</p></div>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  // Pre-warm offscreen images 400px before scrolling into view
+      const htmlContent = '<html><head><title>Receipt - M&B Fashion World</title><style>body{font-family:sans-serif;padding:30px;color:#333;}.header{border-bottom:2px solid #C9A227;padding-bottom:10px;margin-bottom:20px;}h1{color:#C9A227;margin:0;font-size:20px;}.row{margin-bottom:8px;}.label{font-weight:bold;width:140px;display:inline-block;}.footer{margin-top:30px;font-size:12px;color:#888;border-top:1px solid #eee;padding-top:10px;}</style></head><body><div class="header"><h1>M&B Fashion World - Order Receipt</h1></div></body></html>';
+      const printWin = window.open("", "_blank");
+      if (printWin) {
+        printWin.document.write(htmlContent);
+        printWin.document.close();
+        printWin.focus();
+        setTimeout(() => printWin.print(), 250);
+      }
+    });
+  }
+
+  if (whatsappFallbackBtn) {
+    whatsappFallbackBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!orderForm) return;
+      const formData = new FormData(orderForm);
+      const data = Object.fromEntries(formData.entries());
+      let msg = "*NEW BESPOKE ORDER INQUIRY* 🌟\n";
+      msg += "━━━━━━━━━━━━━━━━━━━━━━\n";
+      msg += "👤 *Name:* " + (data.name || 'Not provided') + "\n";
+      msg += "📞 *WhatsApp:* " + (data.whatsapp || 'Not provided') + "\n";
+      msg += "👔 *Outfit:* " + (data.outfit_type || 'Not specified') + "\n";
+      msg += "⏳ *Target Date:* " + (data.deadline || 'Flexible') + "\n";
+      if (data.notes) msg += "📝 *Notes:* " + data.notes + "\n";
+      msg += "━━━━━━━━━━━━━━━━━━━━━━\nLooking forward to your consultation! ✨";
+      window.open("https://wa.me/2348160761870?text=" + encodeURIComponent(msg), "_blank");
+    });
+  }
+
+  // 8. Pre-warm offscreen images 400px before scrolling into view
   if ("IntersectionObserver" in window) {
     const imgObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
@@ -1041,37 +1077,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
       imgObserver.observe(img);
-    });
-  }
-});
-</script>
-
-</body></html>`;
-      const printWin = window.open("", "_blank");
-      if (printWin) {
-        printWin.document.write(htmlContent);
-        printWin.document.close();
-        printWin.focus();
-        setTimeout(() => printWin.print(), 250);
-      }
-    });
-  }
-
-  if (whatsappFallbackBtn) {
-    whatsappFallbackBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (!orderForm) return;
-      const formData = new FormData(orderForm);
-      const data = Object.fromEntries(formData.entries());
-      let msg = "*NEW BESPOKE ORDER INQUIRY* 🌟\n";
-      msg += "━━━━━━━━━━━━━━━━━━━━━━\n";
-      msg += `👤 *Name:* ${data.name || 'Not provided'}\n`;
-      msg += `📞 *WhatsApp:* ${data.whatsapp || 'Not provided'}\n`;
-      msg += `👔 *Outfit:* ${data.outfit_type || 'Not specified'}\n`;
-      msg += `⏳ *Target Date:* ${data.deadline || 'Flexible'}\n`;
-      if (data.notes) msg += `📝 *Notes:* ${data.notes}\n`;
-      msg += "━━━━━━━━━━━━━━━━━━━━━━\nLooking forward to your consultation! ✨";
-      window.open(`https://wa.me/2348160761870?text=${encodeURIComponent(msg)}`, "_blank");
     });
   }
 });
