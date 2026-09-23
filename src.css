@@ -176,3 +176,50 @@
 .hero-slide img {
     will-change: transform, opacity;
 }
+
+
+/* Floating WhatsApp Button Animation & Hover Feedback */
+@keyframes waPulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.65);
+  }
+}
+
+#wa-widget-toggle {
+  animation: waPulseGlow 3s infinite ease-in-out;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, filter 0.3s ease !important;
+}
+
+#wa-widget-toggle:hover {
+  animation: none !important;
+  transform: scale(1.12) translateY(-4px) !important;
+  box-shadow: 0 16px 36px rgba(37, 211, 102, 0.6), 0 0 25px rgba(201, 162, 39, 0.6) !important;
+  filter: brightness(1.08);
+}
+
+#wa-widget-toggle:active {
+  transform: scale(0.95) translateY(0) !important;
+}
+
+
+/* Image Smooth Loading Fade-In & Performance Boosts */
+img {
+  content-visibility: auto;
+}
+img.img-fade-in {
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+img.img-fade-in.loaded {
+  opacity: 1;
+}
+
+#main-header, #wa-widget-toggle, #latest-order-summary {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
